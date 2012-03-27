@@ -12,7 +12,9 @@ var load = function (id, src, callback) {
     node.onreadystatechange = function () {
       if (/loaded|complete/.test(node.readyState)) {
         node.onreadystatechange = null;
-        callback();
+        setTimeout(function () { //IE needs time to initialize new variables :(
+          callback();
+        }, 10);
       }
     };
     document.getElementsByTagName('head')[0].appendChild(node);

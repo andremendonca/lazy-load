@@ -18,16 +18,21 @@ var Lazy = (function (doc) {
           node.id = id;
           node.src = src;
           node.type = "text/javascript";
-          node.onload = function () {
-            loadFinished(callback);
-          };
-          //if IE
-          node.onreadystatechange = function () {
-            if (/loaded|complete/.test(node.readyState)) {
-              node.onreadystatechange = null;
-              loadFinished(callback);
-            }
-          };
+          if (!/MSIE/.test(navigator.userAgent)) {
+            node.onload = function () {
+              loadFinished(callback, node);
+            };
+          } else {
+            //if IE
+            node.onreadystatechange = function () {
+              if (/loaded|complete/.test(node.readyState)) {
+                node.onreadystatechange = null;
+                setTimeout(function () { //IE needs time to initialize new variables :(
+                  loadFinished(callback);
+                }, 10);
+              }
+            };
+          }
           doc.getElementsByTagName('head')[0].appendChild(node);
         } else {
           loadFinished(callback);
