@@ -1,5 +1,11 @@
 var Lazy = (function (doc) {
   var queue = [],
+      loadFinished = function (callback) {
+        callback();
+        if (queue.length > 0) {
+          load();
+        }
+      },
       load = function () {
         var script = queue.shift(),
             id = script[0],
@@ -11,21 +17,19 @@ var Lazy = (function (doc) {
           var node = doc.createElement("script");
           node.id = id;
           node.src = src;
-          node.onload = callback;
+          node.onload = function () {
+            loadFinished(callback);
+          };
           //if IE
           node.onreadystatechange = function () {
             if (/loaded|complete/.test(node.readyState)) {
               node.onreadystatechange = null;
-              callback();
+              loadFinished(callback);
             }
           };
           doc.getElementsByTagName('head')[0].appendChild(node);
         } else {
-          callback();
-        }
-
-        if (queue.length > 0) {
-          load();
+          loadFinished(callback);
         }
       };
 
