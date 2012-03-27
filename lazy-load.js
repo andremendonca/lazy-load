@@ -2,12 +2,13 @@ var Lazy = (function (doc) {
   var queue = [],
       loadFinished = function (callback) {
         callback();
+        queue.shift();
         if (queue.length > 0) {
           load();
         }
       },
       load = function () {
-        var script = queue.shift(),
+        var script = queue[0],
             id = script[0],
             src = script[1],
             callback = script[2] || function () {};
@@ -27,9 +28,7 @@ var Lazy = (function (doc) {
             node.onreadystatechange = function () {
               if (/loaded|complete/.test(node.readyState)) {
                 node.onreadystatechange = null;
-                setTimeout(function () { //IE needs time to initialize new variables :(
-                  loadFinished(callback);
-                }, 10);
+                loadFinished(callback);
               }
             };
           }
