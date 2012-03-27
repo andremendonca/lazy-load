@@ -6,6 +6,7 @@ var load = function (id, src, callback) {
     var node = document.createElement("script");
     node.id = id;
     node.src = src;
+    node.type = "text/javascript";
     node.onload = callback;
     //if IE
     node.onreadystatechange = function () {

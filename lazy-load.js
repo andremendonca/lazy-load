@@ -17,6 +17,7 @@ var Lazy = (function (doc) {
           var node = doc.createElement("script");
           node.id = id;
           node.src = src;
+          node.type = "text/javascript";
           node.onload = function () {
             loadFinished(callback);
           };
