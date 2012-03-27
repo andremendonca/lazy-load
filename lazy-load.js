@@ -24,7 +24,7 @@ var Lazy = (function (doc) {
           callback();
         }
 
-        if (queue.length === 1) {
+        if (queue.length > 0) {
           load();
         }
       };
